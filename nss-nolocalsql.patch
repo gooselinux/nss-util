@@ -1,0 +1,20 @@
+diff -up ./mozilla/security/nss/lib/Makefile.nolocalsql ./mozilla/security/nss/lib/Makefile
+--- ./mozilla/security/nss/lib/Makefile.nolocalsql	2010-02-27 16:40:25.891777537 -0800
++++ ./mozilla/security/nss/lib/Makefile	2010-02-27 16:41:59.175902327 -0800
+@@ -62,11 +62,11 @@ ifndef USE_SYSTEM_ZLIB
+ ZLIB_SRCDIR = zlib  # Add the zlib directory to DIRS.
+ endif
+ 
+-ifndef MOZILLA_CLIENT
+-ifndef NSS_USE_SYSTEM_SQLITE
+-SQLITE_SRCDIR = sqlite  # Add the sqlite directory to DIRS.
+-endif
+-endif
++#ifndef MOZILLA_CLIENT
++#ifndef NSS_USE_SYSTEM_SQLITE
++#SQLITE_SRCDIR = sqlite  # Add the sqlite directory to DIRS.
++#endif
++#endif
+ 
+ ifndef MOZILLA_CLIENT
+ ifeq ($(OS_ARCH),Linux)
