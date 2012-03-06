@@ -1,8 +1,8 @@
-%global nspr_version 4.8.6
+%global nspr_version 4.8.7
 
 Summary:          Network Security Services Utilities Library
 Name:             nss-util
-Version:          3.12.7
+Version:          3.12.9
 Release:          1%{?dist}
 License:          MPLv1.1 or GPLv2+ or LGPLv2+
 URL:              http://www.mozilla.org/projects/security/pki/nss/
@@ -17,22 +17,20 @@ BuildRequires:    psmisc
 BuildRequires:    perl
 
 Source0:          %{name}-%{version}.tar.bz2
-# The nss-util tar ball is a subset of nss-%{version}-stripped.tar.bz2, 
+# The nss-util tar ball is a subset of nss-{version}-stripped.tar.bz2, 
 # Therefore we use the nss-split-util.sh script to keeping only what we need.
 # Download the nss tarball via CVS from the nss propect and follow these
 # steps to make the r tarball for nss-util out of the for nss:
 # cvs co nss
-# cvs nss-util (as soon as it is in cvs - for now extract the srpm)
+# cvs nss-util
 # cd nss-util/devel
-# cp ../../nss/devel/${version}-stripped.tar.bz2  .
-# (use 3.12.3.99.3 for version above until 3.12.4 comes out)
+# cp ../../nss/devel/${version}-stripped.tar.bz2
 # sh ./nss-split-util.sh ${version}
-# A %{name}-%{version}.tar.bz2 should appear
+# A file named {name}-{version}.tar.bz2 should appear
 Source1:          nss-split-util.sh
 Source2:          nss-util.pc.in
 Source3:          nss-util-config.in
 
-Patch1:           nss-nolocalsql.patch
 
 %description
 Utilities for Network Security Services and the Softoken module
@@ -54,13 +52,16 @@ Header and library files for doing development with Network Security Services.
 %prep
 %setup -q
 
-%patch1 -p0 -b .nolocalsql
 
 %build
 
 # Enable compiler optimizations and disable debugging code
 BUILD_OPT=1
 export BUILD_OPT
+
+# Uncomment to disable optimizations
+#RPM_OPT_FLAGS=`echo $RPM_OPT_FLAGS | sed -e 's/-O2/-O0/g'`
+#export RPM_OPT_FLAGS
 
 # Generate symbolic info for debuggers
 XCFLAGS=$RPM_OPT_FLAGS
@@ -77,6 +78,9 @@ NSPR_LIB_DIR=`/usr/bin/pkg-config --libs-only-L nspr | sed 's/-L//'`
 
 export NSPR_INCLUDE_DIR
 export NSPR_LIB_DIR
+
+NSS_USE_SYSTEM_SQLITE=1
+export NSS_USE_SYSTEM_SQLITE
 
 %ifarch x86_64 ppc64 ia64 s390x sparc64
 USE_64=1
@@ -200,6 +204,12 @@ done
 %{_includedir}/nss3/utilrename.h
 
 %changelog
+* Mon Jan 17 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.9-1
+- Update to 3.12.9
+
+* Thu Sep 30 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.8-1
+- Update to 3.12.8
+
 * Thu Aug 26 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.7-1
 - Update to 3.12.7
 
