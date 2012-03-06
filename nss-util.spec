@@ -1,9 +1,9 @@
-%global nspr_version 4.8.7
+%global nspr_version 4.8.8
 
 Summary:          Network Security Services Utilities Library
 Name:             nss-util
-Version:          3.12.9
-Release:          1%{?dist}
+Version:          3.12.10
+Release:          2%{?dist}
 License:          MPLv1.1 or GPLv2+ or LGPLv2+
 URL:              http://www.mozilla.org/projects/security/pki/nss/
 Group:            System Environment/Libraries
@@ -31,6 +31,7 @@ Source1:          nss-split-util.sh
 Source2:          nss-util.pc.in
 Source3:          nss-util-config.in
 
+Patch1:           add-relro-linker-option.patch
 
 %description
 Utilities for Network Security Services and the Softoken module
@@ -51,6 +52,8 @@ Header and library files for doing development with Network Security Services.
 
 %prep
 %setup -q
+
+%patch1 -p0 -b .relro
 
 
 %build
@@ -204,6 +207,12 @@ done
 %{_includedir}/nss3/utilrename.h
 
 %changelog
+* Tue Sep 27 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.10-2
+- Add relro support for executables and shared libraries
+
+* Wed Jul 06 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.10-1
+- Update to 3.12.10
+
 * Mon Jan 17 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.9-1
 - Update to 3.12.9
 
