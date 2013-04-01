@@ -1,9 +1,9 @@
-%global nspr_version 4.8.8
+%global nspr_version 4.8.6
 
 Summary:          Network Security Services Utilities Library
 Name:             nss-util
-Version:          3.12.10
-Release:          2%{?dist}
+Version:          3.12.8
+Release:          1%{?dist}
 License:          MPLv1.1 or GPLv2+ or LGPLv2+
 URL:              http://www.mozilla.org/projects/security/pki/nss/
 Group:            System Environment/Libraries
@@ -17,7 +17,7 @@ BuildRequires:    psmisc
 BuildRequires:    perl
 
 Source0:          %{name}-%{version}.tar.bz2
-# The nss-util tar ball is a subset of nss-{version}-stripped.tar.bz2, 
+# The nss-util tar ball is a subset of nss-%{version}-stripped.tar.bz2, 
 # Therefore we use the nss-split-util.sh script to keeping only what we need.
 # Download the nss tarball via CVS from the nss propect and follow these
 # steps to make the r tarball for nss-util out of the for nss:
@@ -26,12 +26,11 @@ Source0:          %{name}-%{version}.tar.bz2
 # cd nss-util/devel
 # cp ../../nss/devel/${version}-stripped.tar.bz2
 # sh ./nss-split-util.sh ${version}
-# A file named {name}-{version}.tar.bz2 should appear
+# A %{name}-%{version}.tar.bz2 should appear
 Source1:          nss-split-util.sh
 Source2:          nss-util.pc.in
 Source3:          nss-util-config.in
 
-Patch1:           add-relro-linker-option.patch
 
 %description
 Utilities for Network Security Services and the Softoken module
@@ -53,18 +52,12 @@ Header and library files for doing development with Network Security Services.
 %prep
 %setup -q
 
-%patch1 -p0 -b .relro
-
 
 %build
 
 # Enable compiler optimizations and disable debugging code
 BUILD_OPT=1
 export BUILD_OPT
-
-# Uncomment to disable optimizations
-#RPM_OPT_FLAGS=`echo $RPM_OPT_FLAGS | sed -e 's/-O2/-O0/g'`
-#export RPM_OPT_FLAGS
 
 # Generate symbolic info for debuggers
 XCFLAGS=$RPM_OPT_FLAGS
@@ -207,18 +200,6 @@ done
 %{_includedir}/nss3/utilrename.h
 
 %changelog
-* Tue Sep 27 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.10-2
-- Add relro support for executables and shared libraries
-
-* Wed Jul 06 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.10-1
-- Update to 3.12.10
-
-* Mon Jan 17 2011 Elio Maldonado <emaldona@redhat.com> - 3.12.9-1
-- Update to 3.12.9
-
-* Thu Sep 30 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.8-1
-- Update to 3.12.8
-
 * Thu Aug 26 2010 Elio Maldonado <emaldona@redhat.com> - 3.12.7-1
 - Update to 3.12.7
 
